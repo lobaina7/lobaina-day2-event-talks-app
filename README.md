@@ -1,6 +1,9 @@
 # BigQuery Release Notes Hub 🚀
 
-Welcome! This is a simple, easy-to-use visual dashboard designed to help you stay updated with the latest changes in **Google BigQuery** (Google's database service) and share those updates on Twitter/X without needing any technical skills.
+Welcome! This project is built as part of the **Kaggle 5-Day Intensive Course on Designing AI Agents using antigravity-cli**.
+
+This is a simple, easy-to-use visual dashboard designed to help you stay updated with the latest changes in **Google BigQuery** (Google's database service) and share those updates on Twitter/X without needing any technical skills.
+
 
 ---
 
@@ -30,7 +33,7 @@ Open your computer's **Terminal** app.
 ### Step 2: Go to the Project Folder
 Type the following command in the terminal and press **Enter**:
 ```bash
-cd /home/lobaina/Applications/agy-cli-projects/bg-releases-notes
+cd ~/Applications/agy-cli-projects/bg-releases-notes
 ```
 
 ### Step 3: Start the Server
