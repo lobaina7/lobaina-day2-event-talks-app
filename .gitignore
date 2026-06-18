@@ -1,0 +1,26 @@
+# Python virtual environment
+venv/
+ENV/
+env/
+
+# Python caching & bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Flask/Development configuration
+.env
+instance/
+
+# Local samples & downloads
+bigquery-release-notes-sample.xml
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

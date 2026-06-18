@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Release Notes Hub</title>
+    <meta name="description" content="Browse, analyze, and share the latest Google Cloud BigQuery updates and release notes.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- SVG Sprite for Icons -->
+    <svg style="display: none;">
+        <symbol id="icon-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l.56-.56"/>
+        </symbol>
+        <symbol id="icon-twitter" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+        </symbol>
+        <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </symbol>
+        <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </symbol>
+        <symbol id="icon-retweet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="17 1 21 5 17 9"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14M7 23 3 19 7 15"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+        </symbol>
+        <symbol id="icon-comment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </symbol>
+        <symbol id="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>
+        </symbol>
+        <symbol id="icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </symbol>
+        <symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+        </symbol>
+    </svg>
+
+    <div class="app-layout">
+        <!-- Sidebar / Navigation Panel -->
+        <aside class="sidebar-panel">
+            <div class="brand-section">
+                <div class="brand-logo">
+                    <span class="logo-text">BQ</span>
+                </div>
+                <div>
+                    <h1 class="app-title">BigQuery</h1>
+                    <p class="app-subtitle">Release Notes Hub</p>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <h3 class="panel-section-title">Feed Summary</h3>
+                <div class="stat-card">
+                    <span class="stat-label">Total Notes</span>
+                    <span class="stat-value" id="stat-total-notes">-</span>
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-subcard feature">
+                        <span class="stat-label">Features</span>
+                        <span class="stat-value" id="stat-features">0</span>
+                    </div>
+                    <div class="stat-subcard issue">
+                        <span class="stat-label">Issues</span>
+                        <span class="stat-value" id="stat-issues">0</span>
+                    </div>
+                </div>
+                <div class="feed-info-meta">
+                    <span id="feed-status-dot" class="status-dot green"></span>
+                    <span id="feed-last-updated">Updating...</span>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3 class="panel-section-title">Filter by Category</h3>
+                <div class="category-filters">
+                    <button class="filter-btn active" data-category="all" id="filter-all">
+                        <span class="filter-indicator" style="background-color: var(--primary);"></span>
+                        All Updates
+                    </button>
+                    <button class="filter-btn" data-category="Feature">
+                        <span class="filter-indicator" style="background-color: var(--color-feature);"></span>
+                        Features
+                    </button>
+                    <button class="filter-btn" data-category="Issue">
+                        <span class="filter-indicator" style="background-color: var(--color-issue);"></span>
+                        Issues
+                    </button>
+                    <button class="filter-btn" data-category="Announcement">
+                        <span class="filter-indicator" style="background-color: var(--color-announcement);"></span>
+                        Announcements
+                    </button>
+                    <button class="filter-btn" data-category="Changed">
+                        <span class="filter-indicator" style="background-color: var(--color-changed);"></span>
+                        Changed
+                    </button>
+                    <button class="filter-btn" data-category="Deprecated">
+                        <span class="filter-indicator" style="background-color: var(--color-deprecated);"></span>
+                        Deprecated
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <p>Designed for developers to stay up to date and share.</p>
+            </div>
+        </aside>
+
+        <!-- Main Feed Panel -->
+        <main class="feed-panel">
+            <header class="feed-header">
+                <div class="feed-header-left">
+                    <h2 class="section-title">Release Timeline</h2>
+                    <p class="section-subtitle">Select any update card to customize and tweet it.</p>
+                </div>
+                <button id="btn-refresh" class="btn-primary" aria-label="Refresh release notes">
+                    <svg class="icon btn-icon" id="refresh-icon"><use href="#icon-refresh"></use></svg>
+                    <span>Refresh</span>
+                </button>
+            </header>
+
+            <div id="notes-container" class="notes-container">
+                <!-- Skeleton Loader (displayed by default) -->
+                <div class="skeleton-wrapper" id="skeleton-loader">
+                    <div class="skeleton-group">
+                        <div class="skeleton-date"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                    </div>
+                    <div class="skeleton-group">
+                        <div class="skeleton-date"></div>
+                        <div class="skeleton-card"></div>
+                    </div>
+                </div>
+
+                <!-- Feed Content (populated dynamically) -->
+                <div id="feed-content" class="feed-content hidden"></div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state hidden">
+                    <svg class="empty-icon"><use href="#icon-info"></use></svg>
+                    <h3>No matching updates found</h3>
+                    <p>Try changing your category filters or refresh the feed.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Social & Sharing Panel -->
+        <aside class="social-panel" id="social-panel">
+            <div class="mobile-handle-bar"></div>
+            <div class="social-panel-sticky">
+                <div class="panel-header">
+                    <h2 class="section-title">Tweet Composer</h2>
+                    <p class="section-subtitle">Draft a post about the selected update.</p>
+                </div>
+
+                <!-- Tweet Composer Card -->
+                <div class="composer-card">
+                    <div class="composer-user">
+                        <div class="composer-avatar">
+                            <span class="avatar-letter">B</span>
+                        </div>
+                        <div class="composer-user-details">
+                            <span class="user-name">BigQuery Updater</span>
+                            <span class="user-handle">@bq_updates</span>
+                        </div>
+                        <div class="selected-indicator-badge hidden" id="selected-indicator">
+                            <svg class="icon inline-check"><use href="#icon-check"></use></svg>
+                            Linked
+                        </div>
+                    </div>
+
+                    <div class="composer-body">
+                        <textarea id="tweet-textarea" class="tweet-textarea" placeholder="Select an update from the timeline to automatically generate a tweet, or start typing here..." maxlength="280"></textarea>
+                    </div>
+
+                    <div class="composer-footer">
+                        <div class="char-counter-container">
+                            <svg class="progress-ring" width="30" height="30">
+                                <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="transparent" r="12" cx="15" cy="15"/>
+                                <circle id="char-progress-circle" class="progress-ring__circle" stroke="var(--accent-twitter)" stroke-width="2" fill="transparent" r="12" cx="15" cy="15"/>
+                            </svg>
+                            <span id="char-count" class="char-count">280</span>
+                        </div>
+                        
+                        <div class="composer-actions">
+                            <button id="btn-copy" class="btn-secondary" title="Copy text to clipboard">
+                                <svg class="icon"><use href="#icon-copy"></use></svg>
+                            </button>
+                            <button id="btn-tweet-real" class="btn-secondary twitter-brand-btn" title="Compose on X/Twitter">
+                                <svg class="icon"><use href="#icon-twitter"></use></svg>
+                                <span>X.com</span>
+                            </button>
+                            <button id="btn-tweet-mock" class="btn-primary-x" disabled>
+                                <span>Simulate</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mock Twitter Feed -->
+                <div class="mock-feed-section">
+                    <h3 class="panel-section-title">Simulated Twitter Feed</h3>
+                    <div class="mock-tweets-container" id="mock-tweets-container">
+                        <!-- Default placeholder simulated tweet -->
+                        <div class="mock-tweet placeholder-tweet">
+                            <div class="mock-tweet-avatar">🤖</div>
+                            <div class="mock-tweet-content">
+                                <div class="mock-tweet-header">
+                                    <span class="tweet-user">BQ Simulation Bot</span>
+                                    <span class="tweet-handle">@bq_sim</span>
+                                    <span class="tweet-dot">·</span>
+                                    <span class="tweet-time">1h</span>
+                                </div>
+                                <p class="tweet-text">Welcome to the Tweet Simulator! Click <strong>"Simulate"</strong> above to see how your selected BigQuery release note updates will look when shared. Try liking or retweeting below!</p>
+                                <div class="tweet-actions">
+                                    <button class="tweet-action-btn comment">
+                                        <svg class="action-icon"><use href="#icon-comment"></use></svg>
+                                        <span>5</span>
+                                    </button>
+                                    <button class="tweet-action-btn retweet">
+                                        <svg class="action-icon"><use href="#icon-retweet"></use></svg>
+                                        <span>12</span>
+                                    </button>
+                                    <button class="tweet-action-btn heart">
+                                        <svg class="action-icon"><use href="#icon-heart"></use></svg>
+                                        <span>38</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Back to Top / Mobile Panels Floating Action -->
+    <button id="btn-back-to-top" class="floating-btn hidden" aria-label="Scroll to top">
+        <svg class="icon"><use href="#icon-arrow-up"></use></svg>
+    </button>
+
+    <!-- Mobile Navigation Bar (only visible on small viewports) -->
+    <nav class="mobile-nav">
+        <button class="mobile-nav-btn active" id="mobile-nav-feed">
+            <span class="nav-label">Release Notes</span>
+        </button>
+        <button class="mobile-nav-btn" id="mobile-nav-social">
+            <span class="nav-label">Tweet Composer</span>
+            <span class="nav-badge hidden" id="mobile-social-badge">!</span>
+        </button>
+    </nav>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">
+        <span id="toast-message">Message copied!</span>
+    </div>
+
+    <!-- Fallback/Modern browser detection check -->
+    <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
